@@ -57,6 +57,41 @@ class HackChallenge(ABC):
     *****************************************"""
 
 
+class Finding(ABC):
+    """*****************************************
+    *** New Class: Finding             ***
+    *****************************************"""
+    """ Players synthesize findings by combining an Item of Interest (iointerest) and
+    a note.
+    """
+    def __init__(self):
+        self.iointerest = None
+        self.note = None
+    """*****************************************
+    ***          Properties Section          ***
+    *****************************************"""
+    """ This is the Item of Interest (iointerest) property"""
+    @property
+    def note(self):
+        return self._note
+
+    @note.setter
+    def note(self, val):
+        self._note = val
+
+    """ This is the Item of Interest (iointerest) property"""
+    @property
+    def iointerest(self):
+        return self._iointerest
+
+    @iointerest.setter
+    def iointerest(self, val):
+        self._iointerest = val
+    """*****************************************
+    ***        END: Properties Section       ***
+    *****************************************"""
+
+
 class System2Pwn(ABC):
     """*****************************************
     *** New Class: System2Pwn                 ***

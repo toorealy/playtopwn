@@ -1,6 +1,6 @@
 import pytest
 
-from playtopwn.playtopwn.pieces import System2Pwn, OpSystem, HackChallenge, Port, SystemService
+from playtopwn.playtopwn.pieces import System2Pwn, OpSystem, HackChallenge, Port, SystemService, Finding
 
 
 def test_HackChallenge_setters():
@@ -14,6 +14,13 @@ def test_HackChallenge_setters():
     assert test_case.website == 'www.toorealy.com'
     assert test_case.systems == [test_system1, test_system2]
 
+def test_Finding_setters():
+    test_case = Finding()
+    test_case.note = "This is a note."
+    test_port = Port()
+    test_case.iointerest = test_port
+    assert test_case.note == "This is a note."
+    assert test_case.iointerest == test_port
 
 def test_System2Pwn_setters():
     test_case = System2Pwn()
