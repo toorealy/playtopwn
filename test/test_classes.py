@@ -83,7 +83,13 @@ def test_Port_saveload():
 
 def test_SystemService_save():
     test_case = SystemService()
-    test_case.name = "SSH"
-    #test_case.save()
-    #saved_services = [s for s in listdir("saves/services")]
-    #assert str(test_case.name) in saved_services
+    test_case.name = "test"
+    test_case.version = "1"
+    test_case.save()
+    saved_services = [s for s in listdir("saves/services")]
+    assert str(test_case.name) in saved_services
+
+    test_case.version = "2"
+    assert test_case.version == "2"
+    test_case.load("test")
+    assert test_case.version == "1"

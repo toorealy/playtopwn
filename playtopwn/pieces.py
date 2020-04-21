@@ -349,6 +349,7 @@ class Port(ABC):
             str_protocol = str(self.protocol)
         elif self.protocol is None:
             str_protocol = ""
+        # TODO: probably could get rid of everything above this return line
         return "" + str(len(self.services)) + " services running on " + str_protocol + " port " + str_port
 
     def __dict__(self):
@@ -357,7 +358,6 @@ class Port(ABC):
     def __iter__(self):
         for key in self.__dict__():
             yield (key, '{}'.format(self.__dict__()[key]))
-        return
 
     def save(self):
         """ Save a port as JSON"""
@@ -441,8 +441,36 @@ class SystemService(ABC):
         self.name = None
         self.version = None
 
+    def __repr__(self):
+        return "SystemService<" + str(self.name) + "," + str(self.version) + ">"
+
+    def __str__(self):
+        return "" + str(self.name) + " version " + str(self.version)
+
     def __dict__(self):
-        return {'name':self.name,'version':self.version}
+        return {'name':self.name, 'version':self.version}
+
+    def __iter__(self):
+        for key in self.__dict__():
+            yield (key, '{}'.format(self.__dict__()[key]))
+
+    def save(self):
+        """ Save a system service as JSON"""
+        print("\nSaving service...")
+        if self.name:
+            try:
+                save_object(self, "saves/services/" + str(self.name))
+                print("\n", self.name, "was saved.")
+            except (TypeError, NameError) as e:
+                print(self.name, "could not be saved")
+        else:
+            print("\nThere was no service name to save\n")
+
+    def load(self, service_name):
+        """Load from JSON and cast back to proper data type"""
+        loaded_obj = load_object("saves/services/" + str(service_name))
+        self.name = loaded_obj['name']
+        self.version = loaded_obj['version']
 
     """*****************************************
     ***          Properties Section          ***
