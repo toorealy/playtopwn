@@ -70,6 +70,7 @@ def test_SystemService_setters():
     assert test_case.name == "SSH"
     assert test_case.version == "2.0"
 
+"""
 def test_Port_saveload():
     test_case = Port()
     test_case.port = 999999
@@ -81,6 +82,7 @@ def test_Port_saveload():
     test_case.port = 741
     test_case.load(999999)
     assert test_case.port == 999999
+"""
 
 def test_SystemService_saveload():
     test_case = SystemService()
@@ -109,3 +111,38 @@ def test_OpSystem_saveload():
     assert test_case.version == "old"
     test_case.load("Winders version XXL")
     assert test_case.version == "XXL"
+
+def test_System2Pwn_saveload():
+    test_case = System2Pwn()
+    test_case.name = 'Test'
+    test_port1 = Port()
+    test_port1.port = 123
+    test_case.add_port(test_port1)
+    test_port2 = Port()
+    test_port2.port = 456
+    test_case.add_port(test_port2)
+    test_case.op_system.name = "Winders"
+    test_case.op_system.version = "XXL"
+    test_case.op_system.ttl = 999
+    test_case.save()
+    saved_systems = [s for s in listdir("saves/systems")]
+    assert str(test_case) in saved_systems
+    assert test_case.show_saves() == saved_systems
+
+    test_case.name = 'Computer'
+    test_case.op_system.name = "Lindex"
+    test_case.op_system.version = "Newer"
+    test_case.op_system.ttl = 111
+    test_case.remove_port(test_port1)
+    test_case.remove_port(test_port2)
+    assert test_case.name != 'Test'
+    assert test_case.op_system.name != "Winders"
+    assert test_case.op_system.version != "XXL"
+    assert test_case.op_system.ttl != 999
+    assert test_case.open_ports != [dict(test_port1), dict(test_port2)]
+    test_case.load('Test')
+    assert test_case.name == 'Test'
+    assert test_case.op_system.name == "Winders"
+    assert test_case.op_system.version == "XXL"
+    assert test_case.op_system.ttl == 999
+    assert test_case.open_ports == [dict(test_port1), dict(test_port2)]

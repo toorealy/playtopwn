@@ -1,4 +1,5 @@
 from abc import ABC
+import ast
 import json
 from os import listdir
 
@@ -183,11 +184,72 @@ class System2Pwn(ABC):
         return str(self.name)
 
     def __dict__(self):
-        return {'name':self.name,'op_system':dict(self.op_system),'open_ports':dict(self.open_ports)}
+        return {'name':self.name,'op_system':dict(self.op_system),'open_ports':str(self.open_ports)}
 
     def __iter__(self):
         for key in self.__dict__():
             yield (key, '{}'.format(self.__dict__()[key]))
+
+    def save(self):
+        """ Save a System2Pwn as JSON"""
+        print("\nSaving System...")
+        if self.name:
+            try:
+                save_object(self, "saves/systems/" + str(self.name))
+                print("\n Port ", self.name, "was saved.")
+            except (TypeError, NameError) as e:
+                print("Port ", self.port, "could not be saved")
+        else:
+            print("\nThere was no port number to save\n")
+
+    def show_saves(self) -> list:
+        print("\nThese ports are available:")
+        saves = show_saves('systems')
+        for save in saves:
+            print("- ",save)
+        return saves
+
+    def load(self, system_name):
+        """Load from JSON and cast back to proper data type"""
+        loaded_obj = load_object("saves/systems/" + str(system_name))
+        self.name = loaded_obj['name']  #  key value for class
+        os_component = ast.literal_eval(loaded_obj['op_system'])
+        if os_component['name'] != "None":
+            self.op_system.name = os_component['name']
+        else:
+            None
+        if os_component['version'] != "None":
+            self.op_system.version = os_component['version']
+        else:
+            None
+        if os_component['ttl'] != "None":
+            self.op_system.ttl = int(os_component['ttl'])
+        else:
+            None
+        if os_component['packet_size'] != "None":
+            self.op_system.packet_size = int(os_component['packet_size'])
+        else:
+            None
+        if os_component['df_bit'] != "None":
+            self.op_system.df_bit = int(os_component['df_bit'])
+        else:
+            None
+        print(ast.literal_eval(loaded_obj['open_ports']), type(ast.literal_eval(loaded_obj['open_ports'])))
+        self.open_ports = ast.literal_eval(loaded_obj['open_ports'])
+
+
+    def add_port(self, port_object):
+        if dict(port_object) in self.open_ports:
+            pass
+        else:
+            self.open_ports.append(dict(port_object))
+
+    def remove_port(self, port_object):
+        if dict(port_object) in self.open_ports:
+            print("Open: ", self.open_ports)
+            print("Remove: ", dict(port_object))
+            self.open_ports.remove(dict(port_object))
+
 
     """*****************************************
     ***          Properties Section          ***
@@ -220,7 +282,10 @@ class System2Pwn(ABC):
     @open_ports.setter
     def open_ports(self, val):
         if isinstance(val, list):
-            self._open_ports = val
+            dict_ports = []
+            for v in val:
+                dict_ports.append(dict(v))
+            self._open_ports = dict_ports
         else:
             raise TypeError
 
@@ -413,8 +478,8 @@ class Port(ABC):
         for key in self.__dict__():
             yield (key, '{}'.format(self.__dict__()[key]))
 
+    """
     def save(self):
-        """ Save a port as JSON"""
         print("\nSaving port...")
         if self.port:
             try:
@@ -433,13 +498,12 @@ class Port(ABC):
         return saves
 
     def load(self, port_number):
-        """Load from JSON and cast back to proper data type"""
         loaded_obj = load_object("saves/ports/" + str(port_number))
         self.port = int(loaded_obj['port'])
         self.protocol = loaded_obj['protocol']
         self.state = loaded_obj['state']
         self.services = list(loaded_obj['services'])
-
+    """
 
     """*****************************************
     ***          Properties Section          ***
