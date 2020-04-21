@@ -7,9 +7,9 @@ def save_object(object, dest_file):
         json.dump(dict(object), out_file)
 
 
-def load_object(src_file):
+def load_object(object, src_file):
     filehandler = open(src_file, 'r')
-    return json.load(filehandler)
+    return pickle.load(filehandler)
 
 
 class PlotPoint(ABC):
@@ -334,25 +334,17 @@ class Port(ABC):
     def __init__(self):
         self.port = None
         self.protocol = None
-        self.state = None
         self.services = []
 
-    def __repr__(self):
-        return "Port<" + str(self.port) + ">"
-
     def __str__(self):
-        if self.port and not isinstance(self.port, str):
+        if isinstance(self.port, str):
             str_port = str(self.port)
-        elif self.port is None:
+        if self.port is None:
             str_port = ""
-        if self.protocol and not isinstance(self.protocol, str):
-            str_protocol = str(self.protocol)
-        elif self.protocol is None:
-            str_protocol = ""
-        return "" + str(len(self.services)) + " services running on " + str_protocol + " port " + str_port
+        return "" + str(len(self.services)) + " services running on " + self.protocol + " port " + str_port
 
     def __dict__(self):
-        return {'port':self.port,'protocol':self.protocol,'services':self.services, 'state':self.state}
+        return {'port':self.port,'protocol':self.protocol,'services':self.services}
 
     def __iter__(self):
         for key in self.__dict__():
@@ -360,24 +352,16 @@ class Port(ABC):
         return
 
     def save(self):
-        """ Save a port as JSON"""
+        """ Save a port a a pickled object"""
         print("\nSaving port...")
         if self.port:
-            try:
-                save_object(self, "saves/ports/" + str(self.port))
-                print("\n Port ", self.port, "was saved.")
-            except (TypeError, NameError) as e:
-                print("Port ", self.port, "could not be saved")
+#            try:
+            save_object(self, "saves/ports/" + str(self))
+            print("\n Port ", self.port, "was saved.")
+#            except (TypeError, NameError) as e:
+#                print("Port ", self.port, "could not be saved")
         else:
             print("\nThere was no port number to save\n")
-
-    def load(self, port_number):
-        """Load from JSON and cast back to proper data type"""
-        loaded_obj = load_object("saves/ports/" + str(port_number))
-        self.port = int(loaded_obj['port'])
-        self.protocol = loaded_obj['protocol']
-        self.state = loaded_obj['state']
-        self.services = list(loaded_obj['services'])
 
 
     """*****************************************
@@ -427,7 +411,7 @@ class Port(ABC):
 
     @state.setter
     def state(self, val):
-        if isinstance(val, str) or val is None:
+        if isinstance(val, str):
             self._state = val
         else:
             raise TypeError
@@ -443,6 +427,18 @@ class SystemService(ABC):
 
     def __dict__(self):
         return {'name':self.name,'version':self.version}
+
+    def save(self):
+        """ Save a SystemService a a JSON object"""
+        print("\nSaving SystemService...")
+        if self.name:
+            try:
+                save_object(self, "saves/services/" + str(self.name))
+                print("\n System Service ", self.name, "was saved.")
+            except (TypeError, NameError) as e:
+                print("System Service ", self.name, "could not be saved")
+        else:
+            print("\nThere was no System Service name to save\n")
 
     """*****************************************
     ***          Properties Section          ***

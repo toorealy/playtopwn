@@ -1,3 +1,5 @@
+from os import listdir
+
 import pytest
 
 from playtopwn.playtopwn.pieces import System2Pwn, OpSystem, HackChallenge, Port, SystemService, Finding
@@ -67,3 +69,17 @@ def test_SystemService_setters():
     test_case.version = "2.0"
     assert test_case.name == "SSH"
     assert test_case.version == "2.0"
+
+def test_Port_save():
+    test_case = Port()
+    test_case.port = 111
+    test_case.save()
+    saved_ports = [s for s in listdir("saves/ports")]
+    assert str(test_case.port) in saved_ports
+
+def test_SystemService_save():
+    test_case = SystemService()
+    test_case.name = "SSH"
+    test_case.save()
+    saved_services = [s for s in listdir("saves/services")]
+    assert str(test_case.name) in saved_services
