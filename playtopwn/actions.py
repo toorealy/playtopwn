@@ -1,9 +1,21 @@
 from os import listdir
-from os.path import isfile
 import pickle
 
 from .pieces import *
 from saves import *
+
+
+def save_object(object, dest_file):
+    with open(dest_file, 'w') as out_file:
+        json.dump(dict(object), out_file)
+
+def show_saves(folder: str) -> list:
+    return [s for s in listdir("saves/" + folder)]
+
+
+def load_object(src_file):
+    filehandler = open(src_file, 'r')
+    return json.load(filehandler)
 
 
 class SaveLoadNew(ABC):

@@ -1,15 +1,9 @@
 from abc import ABC
 import json
+from os import listdir
 
+from .actions import save_object, show_saves, load_object
 
-def save_object(object, dest_file):
-    with open(dest_file, 'w') as out_file:
-        json.dump(dict(object), out_file)
-
-
-def load_object(src_file):
-    filehandler = open(src_file, 'r')
-    return json.load(filehandler)
 
 
 class PlotPoint(ABC):
@@ -268,6 +262,13 @@ class OpSystem(ABC):
         else:
             print("\nThere was no OS name to save\n")
 
+    def show_saves(self) -> list:
+        print("\nThese OSes are available:")
+        saves = show_saves('os')
+        for save in saves:
+            print("- ",save)
+        return saves
+
     def load(self, os_string):
         """Load from JSON and cast back to proper data type"""
         loaded_obj = load_object("saves/os/" + str(os_string))
@@ -411,6 +412,13 @@ class Port(ABC):
         else:
             print("\nThere was no port number to save\n")
 
+    def show_saves(self) -> list:
+        print("\nThese ports are available:")
+        saves = show_saves('ports')
+        for save in saves:
+            print("- ",save)
+        return saves
+
     def load(self, port_number):
         """Load from JSON and cast back to proper data type"""
         loaded_obj = load_object("saves/ports/" + str(port_number))
@@ -505,6 +513,13 @@ class SystemService(ABC):
                 print(self.name, "could not be saved")
         else:
             print("\nThere was no service name to save\n")
+
+    def show_saves(self) -> list:
+        print("\nThese services are available:")
+        saves = show_saves('services')
+        for save in saves:
+            print("- ",save)
+        return saves
 
     def load(self, service_name):
         """Load from JSON and cast back to proper data type"""

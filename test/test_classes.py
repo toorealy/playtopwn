@@ -76,6 +76,7 @@ def test_Port_saveload():
     test_case.save()
     saved_ports = [s for s in listdir("saves/ports")]
     assert str(test_case.port) in saved_ports
+    assert test_case.show_saves() == saved_ports
 
     test_case.port = 741
     test_case.load(999999)
@@ -88,6 +89,7 @@ def test_SystemService_saveload():
     test_case.save()
     saved_services = [s for s in listdir("saves/services")]
     assert str(test_case.name) in saved_services
+    assert test_case.show_saves() == saved_services
 
     test_case.version = "2"
     assert test_case.version == "2"
@@ -101,6 +103,7 @@ def test_OpSystem_saveload():
     test_case.save()
     saved_os = [s for s in listdir("saves/os")]
     assert str(test_case) in saved_os
+    assert test_case.show_saves() == saved_os
 
     test_case.version = "old"
     assert test_case.version == "old"
