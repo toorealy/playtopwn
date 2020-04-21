@@ -47,8 +47,8 @@ def test_OpSystem_setters():
     assert test_case.packet_size == 1000
     test_case.df_bit = 1
     assert test_case.df_bit == 1
-    test_case.etc = {'this':'interesting','that':'boring'}
-    assert test_case.etc == {'this':'interesting','that':'boring'}
+    #test_case.etc = {'this':'interesting','that':'boring'}
+    #assert test_case.etc == {'this':'interesting','that':'boring'}
 
 def test_Port_setters():
     test_case = Port()
@@ -81,7 +81,7 @@ def test_Port_saveload():
     test_case.load(999999)
     assert test_case.port == 999999
 
-def test_SystemService_save():
+def test_SystemService_saveload():
     test_case = SystemService()
     test_case.name = "test"
     test_case.version = "1"
@@ -93,3 +93,16 @@ def test_SystemService_save():
     assert test_case.version == "2"
     test_case.load("test")
     assert test_case.version == "1"
+
+def test_OpSystem_saveload():
+    test_case = OpSystem()
+    test_case.name = "Winders"
+    test_case.version = "XXL"
+    test_case.save()
+    saved_os = [s for s in listdir("saves/os")]
+    assert str(test_case) in saved_os
+
+    test_case.version = "old"
+    assert test_case.version == "old"
+    test_case.load("Winders version XXL")
+    assert test_case.version == "XXL"

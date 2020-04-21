@@ -241,13 +241,50 @@ class OpSystem(ABC):
         self.ttl = None
         self.packet_size = None
         self.df_bit = None
-        self.etc = dict()
+        #self.etc = dict()  #  TODO: Implement later
 
     def __repr__(self):
-        return "<OpSystem({self.name} v. {self.version})>".format(self=self)
+        return "<OpSystem({self.name},{self.version})>".format(self=self)
 
     def __str__(self):
         return "{self.name} version {self.version}".format(self=self)
+
+    def __dict__(self):
+        return {'name':str(self.name),'version':str(self.version),'ttl':str(self.ttl),'packet_size':str(self.packet_size),'df_bit':str(self.df_bit)}
+
+    def __iter__(self):
+        for key in self.__dict__():
+            yield (key, '{}'.format(self.__dict__()[key]))
+
+    def save(self):
+        """ Save an operating system as JSON"""
+        print("\nSaving OS...")
+        if self.name:
+            try:
+                save_object(self, "saves/os/" + str(self))
+                print("\n OS ", str(self), "was saved.")
+            except (TypeError, NameError) as e:
+                print("OS ", str(self), "could not be saved")
+        else:
+            print("\nThere was no OS name to save\n")
+
+    def load(self, os_string):
+        """Load from JSON and cast back to proper data type"""
+        loaded_obj = load_object("saves/os/" + str(os_string))
+        self.name = loaded_obj['name']
+        self.version = loaded_obj['version']
+        if loaded_obj['ttl'] != "None":
+            self.ttl = int(loaded_obj['ttl'])
+        else:
+            self.ttl = None
+        if loaded_obj['packet_size'] != "None":
+            self.packet_size = int(loaded_obj['packet_size'])
+        else:
+            self.packet_size = None
+        if loaded_obj['df_bit'] != "None":
+            self.df_bit = int(loaded_obj['df_bit'])
+        else:
+            self.df_bit = None
 
     """*****************************************
     ***          Properties Section          ***
@@ -280,6 +317,8 @@ class OpSystem(ABC):
     def ttl(self, val):
         if val:
             self._ttl = int(val)
+        elif val is None:
+            self._ttl = None
 
     """This is the PacketSize property"""
     @property
@@ -304,6 +343,7 @@ class OpSystem(ABC):
             self._df_bit = val
 
     """This is the catchall, etc. It should be a dict of items"""
+    """
     @property
     def etc(self):
         return self._etc
@@ -314,7 +354,7 @@ class OpSystem(ABC):
             self._etc = val
         else:
             raise TypeError
-
+    """
     """*****************************************
     ***        END: Properties Section       ***
     *****************************************"""
