@@ -172,9 +172,22 @@ class System2Pwn(ABC):
 
     """
     def __init__(self):
-        self.name = None
-        self.op_system = None
+        self.name = None  #  key value for class
+        self.op_system = OpSystem()
         self.open_ports = []
+
+    def __repr__(self):
+        return "System2Pwn<{},{}>".format(self.name, str(self.op_system))
+
+    def __str__(self):
+        return str(self.name)
+
+    def __dict__(self):
+        return {'name':self.name,'op_system':dict(self.op_system),'open_ports':dict(self.open_ports)}
+
+    def __iter__(self):
+        for key in self.__dict__():
+            yield (key, '{}'.format(self.__dict__()[key]))
 
     """*****************************************
     ***          Properties Section          ***
@@ -230,7 +243,7 @@ class OpSystem(ABC):
     - ...etc
     """
     def __init__(self):
-        self.name = None
+        self.name = None  # key value for class
         self.version = None
         self.ttl = None
         self.packet_size = None
