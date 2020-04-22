@@ -1,6 +1,7 @@
 README.md
 setup.py
 src/playtopwn/__init__.py
+src/playtopwn/actions.py
 src/playtopwn/game.py
 src/playtopwn/pieces.py
 src/playtopwn/saveload.py

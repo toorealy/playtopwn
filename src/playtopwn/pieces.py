@@ -18,35 +18,6 @@ def load_object(src_file):
     filehandler = open(src_file, 'r')
     return json.load(filehandler)
 
-class Player(ABC):
-    def __init__(self):
-        self.name = None
-        self.savepoints = None
-
-    """*****************************************
-    ***          Properties Section          ***
-    *****************************************"""
-
-    """This is the Name property"""
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, val):
-        self._name = val
-
-    """This is the Savepoints property"""
-    @property
-    def savepoints(self):
-        return self._savepoints
-
-    @savepoints.setter
-    def savepoints(self, val):
-        self._name = val
-    """*****************************************
-    ***        END: Properties Section       ***
-    *****************************************"""
 
 
 class Finding(ABC):
@@ -137,6 +108,7 @@ class HackChallenge(ABC):
         self.name = loaded_obj['name']  #  key value for class
         self.website = loaded_obj['website']
         self.systems = ast.literal_eval(loaded_obj['systems'])
+        return self
 
     def add_system(self, system_object):
         if dict(system_object) in self.systems:

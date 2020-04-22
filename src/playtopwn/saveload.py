@@ -2,9 +2,6 @@ from os import listdir
 import pickle
 
 from .pieces import *
-#from saves import *
-
-
 
 
 class SaveLoadNew(ABC):
@@ -17,16 +14,13 @@ class SaveLoadNew(ABC):
             print(" - ", save)
         print("\nEnter one of these names or type a new one to start at the beginning.\n")
 
-    def load_game(self, challenge):
+    def load_game(self, challenge) -> HackChallenge:
         print("\nLoading save file for", challenge)
         challenge_obj = HackChallenge()  # temporary until previous line dev complete
         return challenge_obj.load(challenge)
 
-    def new_game(self, challenge):
+    def new_game(self, challenge: str) -> HackChallenge:
         print("\nStarting new challenge ", challenge)
-        challenge = HackChallenge()
-        challenge.name = challenge
-        return challenge
-
-
-    #def save_progress(self, aasdas):
+        challenge_obj = HackChallenge()
+        challenge_obj.name = challenge
+        return challenge_obj
