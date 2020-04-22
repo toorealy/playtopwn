@@ -2,7 +2,7 @@ from os import listdir
 
 import pytest
 
-from playtopwn.playtopwn.pieces import System2Pwn, OpSystem, HackChallenge, Port, SystemService, Finding
+from playtopwn.src.playtopwn.pieces import System2Pwn, OpSystem, HackChallenge, Port, SystemService, Finding
 
 
 def test_HackChallenge_setters():
@@ -70,7 +70,7 @@ def test_Port_saveload():
     test_case = Port()
     test_case.port = 999999
     test_case.save()
-    saved_ports = [s for s in listdir("saves/ports")]
+    saved_ports = [s for s in listdir("src/saves/ports")]
     assert str(test_case.port) in saved_ports
     assert test_case.show_saves() == saved_ports
 
@@ -83,7 +83,7 @@ def test_SystemService_saveload():
     test_case.name = "test"
     test_case.version = "1"
     test_case.save()
-    saved_services = [s for s in listdir("saves/services")]
+    saved_services = [s for s in listdir("src/saves/services")]
     assert str(test_case.name) in saved_services
     assert test_case.show_saves() == saved_services
 
@@ -97,7 +97,7 @@ def test_OpSystem_saveload():
     test_case.name = "Winders"
     test_case.version = "XXL"
     test_case.save()
-    saved_os = [s for s in listdir("saves/os")]
+    saved_os = [s for s in listdir("src/saves/os")]
     assert str(test_case) in saved_os
     assert test_case.show_saves() == saved_os
 
@@ -119,7 +119,7 @@ def test_System2Pwn_saveload():
     test_case.op_system.version = "XXL"
     test_case.op_system.ttl = 999
     test_case.save()
-    saved_systems = [s for s in listdir("saves/systems")]
+    saved_systems = [s for s in listdir("src/saves/systems")]
     assert str(test_case) in saved_systems
     assert test_case.show_saves() == saved_systems
 

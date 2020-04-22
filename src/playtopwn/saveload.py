@@ -2,25 +2,14 @@ from os import listdir
 import pickle
 
 from .pieces import *
-from saves import *
+#from saves import *
 
 
-def save_object(object, dest_file):
-    with open(dest_file, 'w') as out_file:
-        json.dump(dict(object), out_file)
-
-def show_saves(folder: str) -> list:
-    return [s for s in listdir("saves/" + folder)]
-
-
-def load_object(src_file):
-    filehandler = open(src_file, 'r')
-    return json.load(filehandler)
 
 
 class SaveLoadNew(ABC):
     def __init__(self):
-        self.save_files = [s for s in listdir("saves/challenges")]
+        self.save_files = [s for s in listdir("src/saves/challenges")]
 
     def prompt_load(self):
         print("\nI found these save files:\n")
@@ -30,8 +19,8 @@ class SaveLoadNew(ABC):
 
     def load_game(self, challenge):
         print("\nLoading save file for", challenge)
-        challenge = HackChallenge()  # temporary until previous line dev complete
-        return challenge.load(challenge)
+        challenge_obj = HackChallenge()  # temporary until previous line dev complete
+        return challenge_obj.load(challenge)
 
     def new_game(self, challenge):
         print("\nStarting new challenge ", challenge)

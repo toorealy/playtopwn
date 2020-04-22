@@ -1,4 +1,4 @@
-from setuptools import find_packages, setup
+from setuptools import find_namespace_packages, setup
 
 
 setup(
@@ -6,7 +6,8 @@ setup(
     version='0.1.1',
     description='Interactive guide to hacking boxes',
     license='LICENSE',
-    packages=find_packages(),
+    package_dir={"": "src"},
+    packages=find_namespace_packages(where="src"),
     setup_requires=[
         'pytest-runner',
     ],

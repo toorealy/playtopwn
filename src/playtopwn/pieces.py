@@ -3,8 +3,20 @@ import ast
 import json
 from os import listdir
 
-from .saveload import *# save_object, show_saves, load_object
+#from playtopwn.saveload import save_object, show_saves, load_object
+#from playtopwn.saveload import *
 
+def save_object(object, dest_file):
+    with open(dest_file, 'w') as out_file:
+        json.dump(dict(object), out_file)
+
+def show_saves(folder: str) -> list:
+    return [s for s in listdir("src/saves/" + folder)]
+
+
+def load_object(src_file):
+    filehandler = open(src_file, 'r')
+    return json.load(filehandler)
 
 class Player(ABC):
     def __init__(self):
@@ -105,7 +117,7 @@ class HackChallenge(ABC):
         print("\nSaving Challenge...")
         if self.name:
             try:
-                save_object(self, "saves/challenges/" + str(self.name))
+                save_object(self, "src/saves/challenges/" + str(self.name))
                 print("\n Challenge ", self.name, "was saved.")
             except (TypeError, NameError) as e:
                 print("Challenge ", self.name, "could not be saved")
@@ -121,7 +133,7 @@ class HackChallenge(ABC):
 
     def load(self, challenge_name):
         """Load from JSON and cast back to proper data type"""
-        loaded_obj = load_object("saves/challenges/" + str(challenge_name))
+        loaded_obj = load_object("src/saves/challenges/" + str(challenge_name))
         self.name = loaded_obj['name']  #  key value for class
         self.website = loaded_obj['website']
         self.systems = ast.literal_eval(loaded_obj['systems'])
@@ -214,7 +226,7 @@ class System2Pwn(ABC):
         print("\nSaving System...")
         if self.name:
             try:
-                save_object(self, "saves/systems/" + str(self.name))
+                save_object(self, "src/saves/systems/" + str(self.name))
                 print("\n System ", self.name, "was saved.")
             except (TypeError, NameError) as e:
                 print("System ", self.name, "could not be saved")
@@ -230,7 +242,7 @@ class System2Pwn(ABC):
 
     def load(self, system_name):
         """Load from JSON and cast back to proper data type"""
-        loaded_obj = load_object("saves/systems/" + str(system_name))
+        loaded_obj = load_object("src/saves/systems/" + str(system_name))
         self.name = loaded_obj['name']  #  key value for class
         os_component = ast.literal_eval(loaded_obj['op_system'])
         if os_component['name'] != "None":
@@ -351,7 +363,7 @@ class OpSystem(ABC):
         print("\nSaving OS...")
         if self.name:
             try:
-                save_object(self, "saves/os/" + str(self))
+                save_object(self, "src/saves/os/" + str(self))
                 print("\n OS ", str(self), "was saved.")
             except (TypeError, NameError) as e:
                 print("OS ", str(self), "could not be saved")
@@ -367,7 +379,7 @@ class OpSystem(ABC):
 
     def load(self, os_string):
         """Load from JSON and cast back to proper data type"""
-        loaded_obj = load_object("saves/os/" + str(os_string))
+        loaded_obj = load_object("src/saves/os/" + str(os_string))
         self.name = loaded_obj['name']
         self.version = loaded_obj['version']
         if loaded_obj['ttl'] != "None":
@@ -499,7 +511,7 @@ class Port(ABC):
         print("\nSaving port...")
         if self.port:
             try:
-                save_object(self, "saves/ports/" + str(self.port))
+                save_object(self, "src/saves/ports/" + str(self.port))
                 print("\n Port ", self.port, "was saved.")
             except (TypeError, NameError) as e:
                 print("Port ", self.port, "could not be saved")
@@ -514,7 +526,7 @@ class Port(ABC):
         return saves
 
     def load(self, port_number):
-        loaded_obj = load_object("saves/ports/" + str(port_number))
+        loaded_obj = load_object("src/saves/ports/" + str(port_number))
         self.port = int(loaded_obj['port'])
         self.protocol = loaded_obj['protocol']
         self.state = loaded_obj['state']
@@ -586,7 +598,7 @@ class SystemService(ABC):
         print("\nSaving service...")
         if self.name:
             try:
-                save_object(self, "saves/services/" + str(self.name))
+                save_object(self, "src/saves/services/" + str(self.name))
                 print("\n", self.name, "was saved.")
             except (TypeError, NameError) as e:
                 print(self.name, "could not be saved")
@@ -602,7 +614,7 @@ class SystemService(ABC):
 
     def load(self, service_name):
         """Load from JSON and cast back to proper data type"""
-        loaded_obj = load_object("saves/services/" + str(service_name))
+        loaded_obj = load_object("src/saves/services/" + str(service_name))
         self.name = loaded_obj['name']
         self.version = loaded_obj['version']
 
