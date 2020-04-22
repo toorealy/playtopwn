@@ -66,7 +66,6 @@ def test_SystemService_setters():
     assert test_case.name == "SSH"
     assert test_case.version == "2.0"
 
-"""
 def test_Port_saveload():
     test_case = Port()
     test_case.port = 999999
@@ -78,7 +77,6 @@ def test_Port_saveload():
     test_case.port = 741
     test_case.load(999999)
     assert test_case.port == 999999
-"""
 
 def test_SystemService_saveload():
     test_case = SystemService()
@@ -142,3 +140,24 @@ def test_System2Pwn_saveload():
     assert test_case.op_system.version == "XXL"
     assert test_case.op_system.ttl == 999
     assert test_case.open_ports == [dict(test_port1), dict(test_port2)]
+
+def test_HackChallenge_saveload():
+    test_case = HackChallenge()
+    test_case.name = 'Test'
+    test_system1 = System2Pwn()
+    test_system1.name = 'Something'
+    test_system2 = System2Pwn()
+    test_case.add_system(test_system1)
+    test_case.add_system(test_system2)
+    print("Systems: ",test_case.systems)
+    test_case.website = 'www.pickle.com'
+    test_case.save()
+    test_case.name = 'Other'
+    test_case.website = 'www.cucumber.io'
+    test_case.remove_system(test_system2)
+    assert dict(test_system1) in test_case.systems
+    assert dict(test_system2) not in test_case.systems
+    test_case.load('Test')
+    assert test_case.name == "Test"
+    assert test_case.website == "www.pickle.com"
+    assert dict(test_system2) in test_case.systems

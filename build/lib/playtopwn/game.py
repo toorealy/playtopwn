@@ -15,7 +15,7 @@ def game_init():
     if user_says in saves.save_files:
         story = saves.load_game(user_says)
     else:
-        story = saves.new_game()
+        story = saves.new_game(user_says)
     return story
 
 if __name__ == "__main__":

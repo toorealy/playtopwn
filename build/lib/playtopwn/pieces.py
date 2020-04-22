@@ -91,10 +91,10 @@ class HackChallenge(ABC):
         return "The challenge {self.name} at {self.website}".format(self=self)
 
     def __repr__(self):
-        return "HackChallenge<{self.name},{self.website},{str(self.systems)}".format(self=self)
+        return "HackChallenge<{},{},{}".format(self.name, self.website, str(self.systems))
 
     def __dict__(self):
-        return {'name':self.name,'website':self.website,'systems':dict(self.systems)}
+        return {'name':self.name,'website':self.website,'systems':str(self.systems)}
 
     def __iter__(self):
         for key in self.__dict__():
@@ -111,6 +111,32 @@ class HackChallenge(ABC):
                 print("Challenge ", self.name, "could not be saved")
         else:
             print("\nThere was no challenge name to save\n")
+
+    def show_saves(self) -> list:
+        print("\nThese saved challenges are available:")
+        saves = show_saves('challenges')
+        for save in saves:
+            print("- ",save)
+        return saves
+
+    def load(self, challenge_name):
+        """Load from JSON and cast back to proper data type"""
+        loaded_obj = load_object("saves/challenges/" + str(challenge_name))
+        self.name = loaded_obj['name']  #  key value for class
+        self.website = loaded_obj['website']
+        self.systems = ast.literal_eval(loaded_obj['systems'])
+
+    def add_system(self, system_object):
+        if dict(system_object) in self.systems:
+            print("You have attempted to add a duplicate system")
+        else:
+            self.systems.append(dict(system_object))
+
+    def remove_system(self, system_object):
+        if dict(system_object) in self.systems:
+            print("Open: ", self.systems)
+            print("Remove: ", dict(system_object))
+            self.systems.remove(dict(system_object))
 
     """*****************************************
     ***          Properties Section          ***
@@ -227,7 +253,6 @@ class System2Pwn(ABC):
             self.op_system.df_bit = int(os_component['df_bit'])
         else:
             None
-        print(ast.literal_eval(loaded_obj['open_ports']), type(ast.literal_eval(loaded_obj['open_ports'])))
         self.open_ports = ast.literal_eval(loaded_obj['open_ports'])
 
 
@@ -493,7 +518,6 @@ class Port(ABC):
         self.port = int(loaded_obj['port'])
         self.protocol = loaded_obj['protocol']
         self.state = loaded_obj['state']
-        self.services = list(loaded_obj['services'])
 
     """*****************************************
     ***          Properties Section          ***

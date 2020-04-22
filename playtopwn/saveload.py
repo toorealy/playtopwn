@@ -28,15 +28,15 @@ class SaveLoadNew(ABC):
             print(" - ", save)
         print("\nEnter one of these names or type a new one to start at the beginning.\n")
 
-    def load_game(self, player_name):
-        print("Loading save file for", player_name)
-        storyline = Storyline()  # TODO: unserialize this from save file
-        storyline.player.name = player_name  # temporary until previous line dev complete
-        return storyline
+    def load_game(self, challenge):
+        print("\nLoading save file for", challenge)
+        challenge = HackChallenge()  # temporary until previous line dev complete
+        return challenge.load(challenge)
 
-    def new_game(self):
-        print("Starting a new game challenge")
+    def new_game(self, challenge):
+        print("\nStarting new challenge ", challenge)
         challenge = HackChallenge()
+        challenge.name = challenge
         return challenge
 
 
