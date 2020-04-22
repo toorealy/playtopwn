@@ -1,0 +1,3 @@
+[console_scripts]
+playtopwn = playtopwn.game:the_beginning
+

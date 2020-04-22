@@ -7,9 +7,6 @@ setup(
     description='Interactive guide to hacking boxes',
     license='LICENSE',
     packages=find_packages(),
-    install_requires=[
-        'ipaddress',
-    ],
     setup_requires=[
         'pytest-runner',
     ],

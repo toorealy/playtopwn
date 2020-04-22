@@ -14,7 +14,7 @@ def test_HackChallenge_setters():
     test_case.systems = [test_system1, test_system2]
     assert test_case.name == 'Wicked hard box'
     assert test_case.website == 'www.toorealy.com'
-    assert test_case.systems == [test_system1, test_system2]
+    assert test_case.systems == [dict(test_system1), dict(test_system2)]
 
 def test_Finding_setters():
     test_case = Finding()
@@ -47,20 +47,16 @@ def test_OpSystem_setters():
     assert test_case.packet_size == 1000
     test_case.df_bit = 1
     assert test_case.df_bit == 1
-    test_case.etc = {'this':'interesting','that':'boring'}
-    assert test_case.etc == {'this':'interesting','that':'boring'}
+    #test_case.etc = {'this':'interesting','that':'boring'}
+    #assert test_case.etc == {'this':'interesting','that':'boring'}
 
 def test_Port_setters():
     test_case = Port()
     test_case.port = 7357
     test_case.protocol = 'TCP'
-    test_case.services = []
     test_case.state = "OPEN"
-    test_service = SystemService()
-    test_case.services = [test_service]
     assert test_case.port == 7357
     assert test_case.protocol == 'TCP'
-    assert test_case.services == [test_service]
     assert test_case.state == "OPEN"
 
 def test_SystemService_setters():
@@ -70,16 +66,79 @@ def test_SystemService_setters():
     assert test_case.name == "SSH"
     assert test_case.version == "2.0"
 
-def test_Port_save():
+"""
+def test_Port_saveload():
     test_case = Port()
-    test_case.port = 111
+    test_case.port = 999999
     test_case.save()
     saved_ports = [s for s in listdir("saves/ports")]
     assert str(test_case.port) in saved_ports
+    assert test_case.show_saves() == saved_ports
 
-def test_SystemService_save():
+    test_case.port = 741
+    test_case.load(999999)
+    assert test_case.port == 999999
+"""
+
+def test_SystemService_saveload():
     test_case = SystemService()
-    test_case.name = "SSH"
+    test_case.name = "test"
+    test_case.version = "1"
     test_case.save()
     saved_services = [s for s in listdir("saves/services")]
     assert str(test_case.name) in saved_services
+    assert test_case.show_saves() == saved_services
+
+    test_case.version = "2"
+    assert test_case.version == "2"
+    test_case.load("test")
+    assert test_case.version == "1"
+
+def test_OpSystem_saveload():
+    test_case = OpSystem()
+    test_case.name = "Winders"
+    test_case.version = "XXL"
+    test_case.save()
+    saved_os = [s for s in listdir("saves/os")]
+    assert str(test_case) in saved_os
+    assert test_case.show_saves() == saved_os
+
+    test_case.version = "old"
+    assert test_case.version == "old"
+    test_case.load("Winders version XXL")
+    assert test_case.version == "XXL"
+
+def test_System2Pwn_saveload():
+    test_case = System2Pwn()
+    test_case.name = 'Test'
+    test_port1 = Port()
+    test_port1.port = 123
+    test_case.add_port(test_port1)
+    test_port2 = Port()
+    test_port2.port = 456
+    test_case.add_port(test_port2)
+    test_case.op_system.name = "Winders"
+    test_case.op_system.version = "XXL"
+    test_case.op_system.ttl = 999
+    test_case.save()
+    saved_systems = [s for s in listdir("saves/systems")]
+    assert str(test_case) in saved_systems
+    assert test_case.show_saves() == saved_systems
+
+    test_case.name = 'Computer'
+    test_case.op_system.name = "Lindex"
+    test_case.op_system.version = "Newer"
+    test_case.op_system.ttl = 111
+    test_case.remove_port(test_port1)
+    test_case.remove_port(test_port2)
+    assert test_case.name != 'Test'
+    assert test_case.op_system.name != "Winders"
+    assert test_case.op_system.version != "XXL"
+    assert test_case.op_system.ttl != 999
+    assert test_case.open_ports != [dict(test_port1), dict(test_port2)]
+    test_case.load('Test')
+    assert test_case.name == 'Test'
+    assert test_case.op_system.name == "Winders"
+    assert test_case.op_system.version == "XXL"
+    assert test_case.op_system.ttl == 999
+    assert test_case.open_ports == [dict(test_port1), dict(test_port2)]

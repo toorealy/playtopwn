@@ -3,13 +3,7 @@ import ast
 import json
 from os import listdir
 
-from .saveload import save_object, show_saves, load_object
-
-
-
-class PlotPoint(ABC):
-    def __init__(self):
-        pass
+from .saveload import *# save_object, show_saves, load_object
 
 
 class Player(ABC):
@@ -38,91 +32,6 @@ class Player(ABC):
     @savepoints.setter
     def savepoints(self, val):
         self._name = val
-    """*****************************************
-    ***        END: Properties Section       ***
-    *****************************************"""
-
-
-class Storyline(ABC):
-    def __init__(self):
-        self.title = None
-        self.plotpoints = set()
-        self.player = Player()
-
-    """*****************************************
-    ***          Properties Section          ***
-    *****************************************"""
-
-    """This is the Title property"""
-    @property
-    def title(self):
-        return self._title
-
-    @title.setter
-    def title(self, val):
-        self._title = val
-
-    """*****************************************
-    ***        END: Properties Section       ***
-    *****************************************"""  #  The gameboard
-
-
-class SavePoint(ABC):
-    def __init__(self):
-        pass
-
-
-class HackChallenge(ABC):
-    """*****************************************
-    *** New Class: HackChallenge             ***
-    *****************************************"""
-    """ Hack Challenges are the Levels players face. They contain Systems2Pwn.
-    They consist of:
-    - A name
-    - A website
-    - A List of Systems2Pwn
-    """
-    def __init__(self):
-        self.name = None
-        self.website = None
-        self.systems = []
-
-    def __str__(self):
-        return "The challenge {self.name} at {self.website}".format(self=self)
-
-    """*****************************************
-    ***          Properties Section          ***
-    *****************************************"""
-
-    """This is the Name property"""
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, val):
-        self._name = val
-
-
-    """ This is the Website property"""
-    @property
-    def website(self):
-        return self._website
-
-    @website.setter
-    def website(self, val):
-        self._website = val
-
-    """ This is the List of systems in the challenge"""
-    @property
-    def systems(self):
-        return self._systems
-
-    @systems.setter
-    def systems(self, val):
-        self._systems = val
-
-
     """*****************************************
     ***        END: Properties Section       ***
     *****************************************"""
@@ -163,6 +72,90 @@ class Finding(ABC):
     *****************************************"""
 
 
+class HackChallenge(ABC):
+    """*****************************************
+    *** New Class: HackChallenge             ***
+    *****************************************"""
+    """ Hack Challenges are the Levels players face. They contain Systems2Pwn.
+    They consist of:
+    - A name
+    - A website
+    - A List of Systems2Pwn
+    """
+    def __init__(self):
+        self.name = None
+        self.website = None
+        self.systems = []
+
+    def __str__(self):
+        return "The challenge {self.name} at {self.website}".format(self=self)
+
+    def __repr__(self):
+        return "HackChallenge<{self.name},{self.website},{str(self.systems)}".format(self=self)
+
+    def __dict__(self):
+        return {'name':self.name,'website':self.website,'systems':dict(self.systems)}
+
+    def __iter__(self):
+        for key in self.__dict__():
+            yield (key, '{}'.format(self.__dict__()[key]))
+
+    def save(self):
+        """ Save a HackChallenge as JSON"""
+        print("\nSaving Challenge...")
+        if self.name:
+            try:
+                save_object(self, "saves/challenges/" + str(self.name))
+                print("\n Challenge ", self.name, "was saved.")
+            except (TypeError, NameError) as e:
+                print("Challenge ", self.name, "could not be saved")
+        else:
+            print("\nThere was no challenge name to save\n")
+
+    """*****************************************
+    ***          Properties Section          ***
+    *****************************************"""
+
+    """This is the Name property"""
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, val):
+        self._name = val
+
+
+    """ This is the Website property"""
+    @property
+    def website(self):
+        return self._website
+
+    @website.setter
+    def website(self, val):
+        self._website = val
+
+    """ This is the List of systems in the challenge"""
+    @property
+    def systems(self):
+        return self._systems
+
+    @systems.setter
+    def systems(self, val):
+        if isinstance(val, list):
+            dict_systems = []
+            for v in val:
+                dict_systems.append(dict(v))
+            self._systems = dict_systems
+        else:
+            raise TypeError
+
+
+    """*****************************************
+    ***        END: Properties Section       ***
+    *****************************************"""
+
+
 class System2Pwn(ABC):
     """*****************************************
     *** New Class: System2Pwn                 ***
@@ -178,7 +171,7 @@ class System2Pwn(ABC):
         self.open_ports = []
 
     def __repr__(self):
-        return "System2Pwn<{},{}>".format(self.name, str(self.op_system))
+        return "System2Pwn<{},{},{}>".format(self.name, str(self.op_system), str(open_ports))
 
     def __str__(self):
         return str(self.name)
@@ -196,11 +189,11 @@ class System2Pwn(ABC):
         if self.name:
             try:
                 save_object(self, "saves/systems/" + str(self.name))
-                print("\n Port ", self.name, "was saved.")
+                print("\n System ", self.name, "was saved.")
             except (TypeError, NameError) as e:
-                print("Port ", self.port, "could not be saved")
+                print("System ", self.name, "could not be saved")
         else:
-            print("\nThere was no port number to save\n")
+            print("\nThere was no system name to save\n")
 
     def show_saves(self) -> list:
         print("\nThese ports are available:")
@@ -477,7 +470,6 @@ class Port(ABC):
         for key in self.__dict__():
             yield (key, '{}'.format(self.__dict__()[key]))
 
-    """
     def save(self):
         print("\nSaving port...")
         if self.port:
@@ -502,7 +494,6 @@ class Port(ABC):
         self.protocol = loaded_obj['protocol']
         self.state = loaded_obj['state']
         self.services = list(loaded_obj['services'])
-    """
 
     """*****************************************
     ***          Properties Section          ***

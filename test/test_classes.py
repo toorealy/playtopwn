@@ -14,7 +14,7 @@ def test_HackChallenge_setters():
     test_case.systems = [test_system1, test_system2]
     assert test_case.name == 'Wicked hard box'
     assert test_case.website == 'www.toorealy.com'
-    assert test_case.systems == [test_system1, test_system2]
+    assert test_case.systems == [dict(test_system1), dict(test_system2)]
 
 def test_Finding_setters():
     test_case = Finding()

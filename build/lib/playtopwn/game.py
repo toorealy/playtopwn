@@ -1,5 +1,5 @@
-from .actions import *
-from .pieces import *
+from playtopwn.saveload import *
+from playtopwn.pieces import *
 
 def the_beginning():
     story = game_init()
@@ -7,7 +7,7 @@ def the_beginning():
 
 
 
-def game_init() -> Storyline:
+def game_init():
     """ Starts the game by loading a previous game or creating a new one"""
     saves = SaveLoadNew()
     saves.prompt_load()
@@ -15,7 +15,7 @@ def game_init() -> Storyline:
     if user_says in saves.save_files:
         story = saves.load_game(user_says)
     else:
-        story = saves.new_game(user_says)
+        story = saves.new_game()
     return story
 
 if __name__ == "__main__":
