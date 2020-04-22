@@ -454,7 +454,6 @@ class Port(ABC):
         self.port = None
         self.protocol = None
         self.state = None
-        self.services = []
 
     def __repr__(self):
         return "Port<" + str(self.port) + ">"
@@ -469,10 +468,10 @@ class Port(ABC):
         elif self.protocol is None:
             str_protocol = ""
         # TODO: probably could get rid of everything above this return line
-        return "" + str(len(self.services)) + " services running on " + str_protocol + " port " + str_port
+        return "" + str_protocol + " port " + str_port
 
     def __dict__(self):
-        return {'port':self.port,'protocol':self.protocol,'services':self.services, 'state':self.state}
+        return {'port':self.port, 'protocol':self.protocol, 'state':self.state}
 
     def __iter__(self):
         for key in self.__dict__():
@@ -530,18 +529,6 @@ class Port(ABC):
     def protocol(self, val):
         if isinstance(val, str) or val is None:
             self._protocol = val
-        else:
-            raise TypeError
-
-    """This is the Services property"""
-    @property
-    def services(self):
-        return self._services
-
-    @services.setter
-    def services(self, val):
-        if isinstance(val, list):
-            self._services = val
         else:
             raise TypeError
 

@@ -54,13 +54,9 @@ def test_Port_setters():
     test_case = Port()
     test_case.port = 7357
     test_case.protocol = 'TCP'
-    test_case.services = []
     test_case.state = "OPEN"
-    test_service = SystemService()
-    test_case.services = [test_service]
     assert test_case.port == 7357
     assert test_case.protocol == 'TCP'
-    assert test_case.services == [test_service]
     assert test_case.state == "OPEN"
 
 def test_SystemService_setters():
