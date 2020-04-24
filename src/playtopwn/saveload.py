@@ -22,5 +22,5 @@ class SaveLoadNew(ABC):
     def new_game(self, challenge: str) -> HackChallenge:
         print("\nStarting new challenge ", challenge)
         challenge_obj = HackChallenge()
-        challenge_obj.name = challenge
+        challenge_obj.name = challenge.lower()
         return challenge_obj

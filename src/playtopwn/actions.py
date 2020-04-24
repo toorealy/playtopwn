@@ -11,7 +11,7 @@ class Player(ABC):
     def __init__(self, story):
         self.name = 'player1'
         a1 = FileMenu(story)
-        a2 = Findings(story)
+        a2 = ModSystems(story)
         self.actions = [a1, a2]
         self.findings = []
         self.story = story
@@ -73,6 +73,7 @@ class PlayerAction(ABC):
         However, this general template should be followed"""
         print("\nYou have reached the PlayerAction master class.\n")
         actions = ['whip', 'nae nae', 'back']
+        action_dict = {}
         user_prompt(self.story, actions)
 
     def back(self):
@@ -98,7 +99,9 @@ class PlayerAction(ABC):
     ***        END: Properties Section       ***
     *****************************************"""
 
-
+"""Menus should be classes
+End-of-line commands should be functions of those classes
+"""
 class FileMenu(PlayerAction):
     def __init__(self, story):
         self.name = "file menu"
@@ -107,16 +110,20 @@ class FileMenu(PlayerAction):
     def execute(self):
         print("\nFile Menu\n")
         actions = ['delete challenge', 'save progress', 'back']
+        action_dict = {
+            0 : self.delete_challenge,
+            1 : self.save_progress,
+            2 : self.back
+        }
         choice = user_prompt(self.story, actions)
         if choice is not None:
-            if choice == 0:
-                self.delete_challenge()
-            if choice == 1:
-                self.save_progress()
+            action_dict.get(choice)()
+        else:
+            self.execute()
 
     def delete_challenge(self):
-        saves = self.story.show_saves()
-        print("- [none]\n\nWhich would you like to delete?\n")
+        saves = self.story.show_saves(silent=True)
+        print("\nWhich would you like to delete?\n")
         choice = user_prompt(self.story, saves)
         if choice is not None:
             dlt_file = "src/saves/challenges/" + saves[choice]
@@ -130,8 +137,43 @@ class FileMenu(PlayerAction):
 
     def save_progress(self):
         self.story.save()
+        self.execute()  #  This should be at the end of each action except 'back'
 
 
-class Findings(PlayerAction):
+class ModSystems(PlayerAction):
     def __init__(self, story):
-        self.name = "examine findings"
+        self.name = "systems"
+        self.story = story
+
+    def execute(self):
+        print("\nSystems Menu\n")
+        actions = ['display systems', 'add system', 'remove system', 'back']
+        action_dict = {
+            0 : self.display_systems,
+            1 : self.add_system,
+            2 : self.remove_system,
+            3 : self.back
+        }
+        choice = user_prompt(self.story, actions)
+        if choice is not None:
+            action_dict.get(choice)()
+        else:
+            self.execute()  #  This should be at the end of each action except 'back'
+
+    def display_systems(self):
+        print("\nThese are the systems so far:\n")
+        self.story.show_systems()
+        self.execute()  #  This should be at the end of each action except 'back'
+
+    def add_system(self):
+        print("\nWhat is the name of the new system?\n")
+        sys_name = str(input("Name: "))
+        self.story.add_system(sys_name)
+        self.execute()  #  This should be at the end of each action except 'back'
+
+    def remove_system(self):
+        print("\nWhich system would you like to remove?\n")
+        choice = user_prompt(self.story, self.story.show_systems(silent=True))
+        if choice is not None:
+            print("\nSystem ", self.story.systems.pop(choice)['name'], " deleted.")
+        self.execute()  #  This should be at the end of each action except 'back'

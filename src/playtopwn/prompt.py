@@ -3,10 +3,12 @@ def user_prompt(story, actions: list):
     for action in actions:
         str_actions.append(str(action))
         print("[", action,"]")
-    prompt = str(input("{} # ".format(story.name)))
+    prompt = str(input("\n {} # ".format(story.name)))
     print("\n\n\n\n*****************************************************************************************\n\n")
     candidates = [str_actions.index(elem) for elem in str_actions if prompt.lower() in elem.lower()]
-    if len(candidates) == 1:
+    if prompt.lower() in str_actions:
+        return str_actions.index(prompt.lower())
+    elif len(candidates) == 1:
         return candidates[0]
     elif len(candidates) > 1:
         #print("\nThat was ambiguous\n")

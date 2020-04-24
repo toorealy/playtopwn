@@ -32,7 +32,7 @@ def game_init():
     try:
         saves = SaveLoadNew()
         saves.prompt_load()
-        user_says = str(input(" # "))
+        user_says = str(input(" # ")).lower()
         if user_says in saves.save_files:
             story = saves.load_game(user_says)
         elif user_says:

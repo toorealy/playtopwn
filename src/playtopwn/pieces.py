@@ -95,11 +95,13 @@ class HackChallenge(ABC):
         else:
             print("\nThere was no challenge name to save\n")
 
-    def show_saves(self) -> list:
-        print("\nThese saved challenges are available:")
+    def show_saves(self, *, silent=False) -> list:
+        if not silent:
+            print("\nThese saved challenges are available:")
         saves = show_saves('challenges')
         for save in saves:
-            print("- ",save)
+            if not silent:
+                print("- ",save)
         return saves
 
     def load(self, challenge_name):
@@ -110,17 +112,31 @@ class HackChallenge(ABC):
         self.systems = ast.literal_eval(loaded_obj['systems'])
         return self
 
-    def add_system(self, system_object):
+    def add_system(self, system_name):
+        system_object = System2Pwn()
+        system_object.name = str(system_name)
         if dict(system_object) in self.systems:
             print("You have attempted to add a duplicate system")
         else:
             self.systems.append(dict(system_object))
+            print("System added")
+            self.show_systems()
 
-    def remove_system(self, system_object):
+    def remove_system(self, system_name):
+        system_object = System2Pwn()
+        system_object.load(str(system_name))
         if dict(system_object) in self.systems:
             print("Open: ", self.systems)
             print("Remove: ", dict(system_object))
             self.systems.remove(dict(system_object))
+
+    def show_systems(self, *,silent=False):
+        return_list = []
+        for pwn in self.systems:
+            if not silent:
+                print(" - ", pwn['name'])
+            return_list.append(pwn['name'])
+        return return_list
 
     """*****************************************
     ***          Properties Section          ***

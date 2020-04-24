@@ -12,4 +12,4 @@ playtopwn
 ```
 You're in! Follow the command prompts to work through the game.
 - You only need to use as many letters as it takes to make a sub-string unique to a single option (e.g. 'fil' will be enough to open 'file menu')
-- Use `ctrl+c` to exit the program.
+- Use `Ctrl+C` to exit the program.
