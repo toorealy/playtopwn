@@ -154,7 +154,6 @@ class FileMenu(PlayerAction):
         actions = self.story.show_saves(silent=True)
         choice = user_prompt(self.story, actions)
         if choice is not None:
-            #self.story.load(actions[choice].lower())
             try:
                 self.story.load(actions[choice].lower())
             except FileNotFoundError:
@@ -171,12 +170,13 @@ class ModSystems(PlayerAction):
 
     def execute(self):
         print("\nSystems Menu\n")
-        actions = ['display systems', 'add system', 'remove system', 'back']
+        actions = ['display systems', 'expand system', 'add system', 'remove system', 'back']
         action_dict = {
             0 : self.display_systems,
-            1 : self.add_system,
-            2 : self.remove_system,
-            3 : self.back
+            1 : self.expand_system,
+            2 : self.add_system,
+            3 : self.remove_system,
+            4 : self.back
         }
         choice = user_prompt(self.story, actions)
         if choice is not None:
@@ -188,6 +188,17 @@ class ModSystems(PlayerAction):
         print("\nThese are the systems so far:\n")
         self.story.show_systems()
         self.execute()  #  This should be at the end of each action except 'back'
+
+    def expand_system(self):
+        print("\nChoose a system")
+        actions = self.story.show_systems(silent=True)
+        choice = user_prompt(self.story, actions)
+        if choice is not None:
+            try:
+                print("Well, the rabbit hole seems closed for now")
+            except:
+                pass
+        self.execute()
 
     def add_system(self):
         print("\nWhat is the name of the new system?\n")
