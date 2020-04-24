@@ -1,1 +1,0 @@
-{"name": "Test", "op_system": "{'name': 'Winders', 'version': 'XXL', 'ttl': '999', 'packet_size': 'None', 'df_bit': 'None'}", "open_ports": "[{'port': '123', 'protocol': 'None', 'state': 'None'}, {'port': '456', 'protocol': 'None', 'state': 'None'}]"}
