@@ -7,7 +7,7 @@ from os import listdir
 #from playtopwn.saveload import *
 
 def save_object(object, dest_file):
-    with open(dest_file, 'w') as out_file:
+    with open(dest_file.lower(), 'w') as out_file:
         json.dump(dict(object), out_file)
 
 def show_saves(folder: str) -> list:
@@ -15,7 +15,7 @@ def show_saves(folder: str) -> list:
 
 
 def load_object(src_file):
-    filehandler = open(src_file, 'r')
+    filehandler = open(src_file.lower(), 'r')
     return json.load(filehandler)
 
 

@@ -9,10 +9,10 @@ class SaveLoadNew(ABC):
         self.save_files = [s for s in listdir("src/saves/challenges")]
 
     def prompt_load(self):
-        print("\nI found these save files:\n")
+        print("\nI found these saved challenges:\n")
         for save in self.save_files:
             print(" - ", save)
-        print("\nEnter one of these names or type a new one to start at the beginning.\n")
+        print("\nEnter one of these challenge names or type a new one.\n")
 
     def load_game(self, challenge) -> HackChallenge:
         print("\nLoading save file for", challenge)

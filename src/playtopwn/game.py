@@ -1,28 +1,18 @@
 from playtopwn.saveload import *
 from playtopwn.pieces import *
 from playtopwn.actions import *
-
-#PROMPT = ""
+from playtopwn.prompt import user_prompt
 
 
 def game_loop(player):
     try:
         while True:
             print('\nSelect one of these options:\n')
-            str_actions = []
-            for action in player.actions:
-                str_actions.append(action.name)
-                print("[", action.name,"]")
-            prompt = str(input("{} # ".format(player.story.name)))
-            print("\n\n\n\n*****************************************************************************************\n\n")
-            candidates = [str_actions.index(elem) for elem in str_actions if prompt.lower() in elem]#[str_actions.index(action) for action in str_actions if prompt.lower() in action.lower()]
-            if len(candidates) == 1:
-                player.actions[candidates[0]].execute(player.story)
-            elif len(candidates) > 1:
-                print("\nThat was an ambiguous command.\n")
-            else:
-                print("\nI didn't understand that command.\n")
+            choice = user_prompt(player.story, player.actions)
+            if choice is not None:
+                player.actions[choice].execute()
     except KeyboardInterrupt:
+        player.story.save()
         print("\nGoodbye.")
 
 def the_beginning():
