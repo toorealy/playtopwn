@@ -104,6 +104,21 @@ class HackChallenge(ABC):
                 print("- ",save)
         return saves
 
+    def save_as(self, name):
+        target = HackChallenge()
+        target.name = name
+        target.website = self.website
+        target.systems = self.systems
+        target.save()
+        self.load(target.name)
+
+    def reset_challenge(self, name):
+        if len(name) > 0:
+            new_challenge = HackChallenge()
+            self.name = name
+            self.website = new_challenge.website
+            self.systems = new_challenge.systems
+
     def load(self, challenge_name):
         """Load from JSON and cast back to proper data type"""
         loaded_obj = load_object("src/saves/challenges/" + str(challenge_name))
@@ -119,15 +134,17 @@ class HackChallenge(ABC):
             print("You have attempted to add a duplicate system")
         else:
             self.systems.append(dict(system_object))
+            system_object.save(self.name + "_")
             print("System added")
             self.show_systems()
 
     def remove_system(self, system_name):
         system_object = System2Pwn()
-        system_object.load(str(system_name))
+        try:
+            system_object.load(self.name + "_" + str(system_name))
+        except FileNotFoundError:
+            pass
         if dict(system_object) in self.systems:
-            print("Open: ", self.systems)
-            print("Remove: ", dict(system_object))
             self.systems.remove(dict(system_object))
 
     def show_systems(self, *,silent=False):
@@ -209,12 +226,12 @@ class System2Pwn(ABC):
         for key in self.__dict__():
             yield (key, '{}'.format(self.__dict__()[key]))
 
-    def save(self):
+    def save(self, prefix=""):
         """ Save a System2Pwn as JSON"""
         print("\nSaving System...")
         if self.name:
             try:
-                save_object(self, "src/saves/systems/" + str(self.name))
+                save_object(self, "src/saves/systems/" + prefix + str(self.name))
                 print("\n System ", self.name, "was saved.")
             except (TypeError, NameError) as e:
                 print("System ", self.name, "could not be saved")

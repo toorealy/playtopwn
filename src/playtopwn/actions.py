@@ -109,11 +109,13 @@ class FileMenu(PlayerAction):
 
     def execute(self):
         print("\nFile Menu\n")
-        actions = ['delete challenge', 'save progress', 'back']
+        actions = ['delete challenge', 'new challenge', 'save as', 'switch challenge', 'back']
         action_dict = {
             0 : self.delete_challenge,
-            1 : self.save_progress,
-            2 : self.back
+            1 : self.new_challenge,
+            2 : self.save_progress_as,
+            3 : self.switch_challenge,
+            4 : self.back
         }
         choice = user_prompt(self.story, actions)
         if choice is not None:
@@ -134,9 +136,31 @@ class FileMenu(PlayerAction):
                 print("  ", file, "doesn't exist to delete.")
         self.execute()  #  This should be at the end of each action except 'back'
 
-
-    def save_progress(self):
+    def new_challenge(self):
+        print("\nWhat is the new challenge's name?\n")
+        new_name = str(input("Name: ")).lower()
         self.story.save()
+        self.story.reset_challenge(new_name)
+        self.execute()  #  This should be at the end of each action except 'back'
+
+    def save_progress_as(self):
+        print("\nNew save name?\n")
+        self.story.save_as(str(input("Name: ")).lower())
+        self.execute()  #  This should be at the end of each action except 'back'
+
+    def switch_challenge(self):
+        self.story.save()
+        print("\nWhich challenge do you want to switch to?\n")
+        actions = self.story.show_saves(silent=True)
+        choice = user_prompt(self.story, actions)
+        if choice is not None:
+            #self.story.load(actions[choice].lower())
+            try:
+                self.story.load(actions[choice].lower())
+            except FileNotFoundError:
+                print("You can only switch to challenges that already exist.")
+            except PermissionError:
+                print("You do not have the permissions to do this.")
         self.execute()  #  This should be at the end of each action except 'back'
 
 
